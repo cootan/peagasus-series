@@ -1,0 +1,177 @@
+{% extends "partials/layout.njk" %}
+
+{% block content %}
+<div id="movieContainer" class="bg-gray-900 text-white min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <nav class="text-sm mb-4">
+      <a href="/" class="text-gray-400 hover:text-white">Home</a>
+      <span class="mx-2 text-gray-600">·</span>
+      <span class="text-purple-400">{{ movie.Name }}</span>
+    </nav>
+
+    <div class="flex flex-col md:flex-row">
+      <!-- Movie details -->
+      <div id="movieDetails" class="w-full md:w-1/3 pr-0 md:pr-4 mb-4 md:mb-0">
+        <div class="bg-gray-800 rounded-lg p-4 mb-4">
+          <h2 class="text-2xl font-bold mb-2">{{ movie.Name }}</h2>
+          <p class="text-gray-300 mb-2">Genre: {{ movie.Genre }}</p>
+          <p class="text-gray-300 mb-2">Year: {{ movie.Year }}</p>
+          <p class="text-gray-300 mb-2">Synopsis: {{ movie.Synopsis }}</p>
+          <p class="text-gray-300">{{ movie.Description }}</p>
+        </div>
+      </div>
+
+      <!-- Video player -->
+      <div id="videoPlayerContainer" class="w-full md:w-2/3 relative">
+        <!-- Responsive iFrame container -->
+        <div id="iframeContainer" class="hidden absolute top-0 left-0 w-full h-full z-10">
+          <iframe id="movieIframe" name="movieIframe" class="w-full h-full rounded-lg border-none" src="" allowfullscreen></iframe>
+        </div>
+        <div class="relative" style="padding-top: 56.25%;">
+          <img id="movieThumbnail" src="{{ movie.Image }}" alt="{{ movie.Name }}" class="absolute top-0 left-0 w-full h-full object-cover rounded-lg z-0">
+          <button id="playButton" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 hover:bg-green-600 rounded-full p-4 z-20">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    
+    <div id="controlsContainer" class="bg-gray-800 rounded-lg mt-4 p-4 ">
+      <div class="flex flex-wrap justify-between items-center mb-4">
+        <div class="flex flex-wrap space-x-2 mb-2 md:mb-0">
+          <button id="lightToggleOff" class="flex items-center text-gray-300 hover:text-white mb-2 md:mb-0">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+            Light Off
+          </button>
+          <button id="lightToggleOn" class="flex items-center text-gray-300 hover:text-white mb-2 md:mb-0 hidden">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+            Light On
+          </button>
+          <button class="text-gray-300 hover:text-white mb-2 md:mb-0">Auto Play Off</button>
+        </div>
+        <div class="flex space-x-2">
+          <button id="addToListButton" class="text-gray-300 hover:text-white flex items-center">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            Add to list
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-green-500 text-center py-2 rounded">
+        You are watching {{ movie.Name }}
+      </div>
+
+      <div class="flex flex-wrap mt-4">
+        <span class="bg-gray-700 text-gray-300 px-2 py-1 rounded mr-2 mb-2">Watch:</span>
+        {% if movie.Filemoon %}
+          <a href="{{ movie.Filemoon }}" target="movieIframe" class="server-link bg-green-500 hover:bg-green-600 px-3 py-1 rounded mr-2 mb-2">Filemoon</a>
+        {% endif %}
+        {% if movie.Streamhd %}
+          <a href="{{ movie.Streamhd }}" target="movieIframe" class="server-link bg-green-500 hover:bg-green-600 px-3 py-1 rounded mr-2 mb-2">Streamhd</a>
+        {% endif %}
+        {% if movie.Gohost %}
+          <a href="{{ movie.Gohost }}" target="movieIframe" class="server-link bg-green-500 hover:bg-green-600 px-3 py-1 rounded mr-2 mb-2">Gohost</a>
+        {% endif %}
+        {% if movie.Host5 %}
+          <a href="{{ movie.Host5 }}" target="movieIframe" class="server-link bg-green-500 hover:bg-green-600 px-3 py-1 rounded mr-2 mb-2">Host5</a>
+        {% endif %}
+        {% if movie.Listembed %}
+          <a href="{{ movie.Listembed }}" target="movieIframe" class="server-link bg-green-500 hover:bg-green-600 px-3 py-1 rounded mr-2 mb-2">Listembed</a>
+        {% endif %}
+        {% if movie.Abyss %}
+          <a href="{{ movie.Abyss }}" target="movieIframe" class="server-link bg-green-500 hover:bg-green-600 px-3 py-1 rounded mr-2 mb-2">Abyss</a>
+        {% endif %}
+        {% if movie.Gdrive %}
+          <a href="{{ movie.Gdrive }}" target="movieIframe" class="server-link bg-green-500 hover:bg-green-600 px-3 py-1 rounded mr-2 mb-2">Gdrive</a>
+        {% endif %}
+        {% if movie.Streamsb %}
+          <a href="{{ movie.Streamsb }}" target="movieIframe" class="server-link bg-green-500 hover:bg-green-600 px-3 py-1 rounded mr-2 mb-2">Streamsb</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<div id="disqus_thread"></div>
+<script>
+ 
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = "{{ movie.Name }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://animedekhle-2.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const lightToggleOff = document.getElementById('lightToggleOff');
+    const lightToggleOn = document.getElementById('lightToggleOn');
+    const playButton = document.getElementById('playButton');
+    const movieThumbnail = document.getElementById('movieThumbnail');
+    const iframeContainer = document.getElementById('iframeContainer');
+    const movieIframe = document.getElementById('movieIframe');
+    const serverLinks = document.querySelectorAll('.server-link');
+
+    function toggleLights() {
+        const movieContainer = document.getElementById('movieContainer');
+        const movieDetails = document.getElementById('movieDetails');
+        const controlsContainer = document.getElementById('controlsContainer');
+        const videoPlayerContainer = document.getElementById('videoPlayerContainer');
+
+        if (movieContainer.classList.contains('bg-gray-900')) {
+            movieContainer.classList.remove('bg-gray-900');
+            movieContainer.classList.add('bg-gray-800');
+            movieDetails.style.display = 'none';
+            controlsContainer.style.display = 'none';
+            videoPlayerContainer.classList.remove('md:w-2/3');
+            videoPlayerContainer.classList.add('md:w-full');
+        } else {
+            movieContainer.classList.remove('bg-gray-800');
+            movieContainer.classList.add('bg-gray-900');
+            movieDetails.style.display = 'block';
+            controlsContainer.style.display = 'block';
+            videoPlayerContainer.classList.remove('md:w-full');
+            videoPlayerContainer.classList.add('md:w-2/3');
+        }
+        lightToggleOff.classList.toggle('hidden');
+        lightToggleOn.classList.toggle('hidden');
+    }
+
+    function setActiveLink(link) {
+        serverLinks.forEach(link => link.classList.remove('bg-blue-500'));
+        link.classList.add('bg-blue-500');
+    }
+
+    lightToggleOff.addEventListener('click', toggleLights);
+    lightToggleOn.addEventListener('click', toggleLights);
+
+    playButton.addEventListener('click', function() {
+        playButton.style.display = 'none';
+        movieThumbnail.style.display = 'none';
+        iframeContainer.classList.remove('hidden');
+        
+        // Set the first link as the active source
+        const firstLink = document.querySelector('.server-link');
+        if (firstLink) {
+            movieIframe.src = firstLink.href;
+            setActiveLink(firstLink);
+        }
+    });
+
+    // Add event listeners to the server link buttons
+    serverLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            movieIframe.src = this.href;
+            setActiveLink(this);
+        });
+    });
+});
+</script>
+{% endblock %}

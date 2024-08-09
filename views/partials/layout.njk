@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pegasus | {% block title %}Home{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/alpine.min.js" defer></script>
+
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <header class="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-4">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="/" class="text-xl font-bold hover:text-gray-200 transition-colors duration-200">
+                Pegasus
+            </a>
+            <nav>
+                <a href="/" class="text-white hover:text-gray-200 px-4">Home</a>
+                <a href="/posts" class="text-white hover:text-gray-200 px-4">Posts</a>
+                <!-- Add more links as needed -->
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 Pegasus. All rights reserved.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

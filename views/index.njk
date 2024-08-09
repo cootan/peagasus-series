@@ -1,0 +1,96 @@
+{% extends "partials/layout.njk" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row items-center">
+        <!-- Carousel -->
+        <div class="relative w-full md:w-1/2">
+            <div class="relative w-full h-80 overflow-hidden rounded-lg bg-gray-800">
+                <!-- Slide 1 -->
+                <img 
+                    src="https://i.ibb.co/TmDpCVR/blob.jpg" 
+                    class="w-full h-full object-cover absolute transition-opacity duration-1000" 
+                    style="opacity: 1;" 
+                    loading="lazy"
+                    alt="Slide 1"
+                >
+                <!-- Slide 2 -->
+                <img 
+                    src="https://i.ibb.co/brBR2Dh/blob.jpg" 
+                    class="w-full h-full object-cover absolute transition-opacity duration-1000" 
+                    style="opacity: 0;" 
+                    loading="lazy"
+                    alt="Slide 2"
+                >
+                <!-- Slide 3 -->
+                <img 
+                    src="https://i.ibb.co/xsM2k9m/blob.jpg" 
+                    class="w-full h-full object-cover absolute transition-opacity duration-1000" 
+                    style="opacity: 0;" 
+                    loading="lazy"
+                    alt="Slide 3"
+                >
+                <!-- Slide 4 -->
+                <img 
+                    src="https://i.ibb.co/RCMs4CD/blob.jpg" 
+                    class="w-full h-full object-cover absolute transition-opacity duration-1000" 
+                    style="opacity: 0;" 
+                    loading="lazy"
+                    alt="Slide 4"
+                >
+                <!-- Slide 5 -->
+                <img 
+                    src="https://i.ibb.co/hL3sYzn/blob.jpg" 
+                    class="w-full h-full object-cover absolute transition-opacity duration-1000" 
+                    style="opacity: 0;" 
+                    loading="lazy"
+                    alt="Slide 5"
+                >
+            </div>
+            <button class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full focus:outline-none" aria-label="Previous slide">
+                &lt;
+            </button>
+            <button class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full focus:outline-none" aria-label="Next slide">
+                &gt;
+            </button>
+        </div>
+
+        <!-- Text Content -->
+        <div class="mt-8 md:mt-0 md:ml-8 md:w-1/2 text-center md:text-left">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to Pegasus</h1>
+            <p class="text-lg md:text-xl mb-6">Embark on an extraordinary journey through the captivating world of anime with Pegasus. Our carefully curated collection features a diverse range of genres and stories, designed to offer something unique for every anime enthusiast. From action-packed adventures to heartwarming tales, discover your next favorite series and immerse yourself in a realm of boundless imagination.</p>
+            <p class="text-lg md:text-xl mb-6">Explore our extensive library of anime posts, each with detailed information, reviews, and recommendations to help you make informed choices. Whether you're a seasoned fan or new to the anime scene, Pegasus is here to guide you through an unforgettable viewing experience. Join our community, dive into our content, and let the adventure begin!</p>
+            <a href="/posts" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">Browse Posts</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const slides = document.querySelectorAll('img');
+        let currentSlide = 0;
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.opacity = i === index ? '1' : '0';
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        document.querySelector('button[aria-label="Next slide"]').addEventListener('click', nextSlide);
+        document.querySelector('button[aria-label="Previous slide"]').addEventListener('click', prevSlide);
+
+        // Automatically change slides every 5 seconds
+        setInterval(nextSlide, 5000);
+    });
+</script>
+{% endblock %}

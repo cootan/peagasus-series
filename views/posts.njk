@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pegasus{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-gray-900 text-white" x-data="{ mobileMenuOpen: false, search: '', selectedGenre: [], genreModal: false }">
+    <header class="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-6">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="/" class="text-2xl font-bold hover:text-gray-200 transition-colors duration-200">Pegasus</a>
+            <div class="hidden md:flex items-center space-x-4">
+                <input type="text" x-model="search" placeholder="Search..." aria-label="Search" class="px-4 py-2 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow duration-200" @input="filterPosts()">
+                <button @click="genreModal = true" class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200" aria-label="Select Genres">
+                    Genres 
+                    <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+            </div>
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden focus:outline-none" aria-label="Toggle Mobile Menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        <div x-show="mobileMenuOpen" class="md:hidden mt-4 container mx-auto transition-opacity duration-300" x-transition>
+            <input type="text" x-model="search" placeholder="Search..." aria-label="Search" class="w-full px-4 py-2 rounded-lg text-gray-900 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow duration-200" @input="filterPosts()">
+            <button @click="genreModal = true" class="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200" aria-label="Select Genres">
+                Genres 
+                <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <button @click="filterPosts()" class="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200" aria-label="Search">
+                Search
+            </button>
+        </div>
+    </header>
+    
+  <!-- Modal Genre Selection -->
+<div x-show="genreModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-70 transition-opacity duration-300" x-transition @click.away="genreModal = false">
+    <div class="bg-gray-800 rounded-lg shadow-md w-full max-w-md p-4">
+        <h2 class="text-xl font-semibold mb-4 text-center text-white">Select Genres</h2>
+        <div class="space-y-2">
+            <!-- Existing Genres -->
+            <label class="flex items-center space-x-2 cursor-pointer text-white">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600" value="action" x-model="selectedGenre">
+                <span class="text-sm">Action</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer text-white">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600" value="adventure" x-model="selectedGenre">
+                <span class="text-sm">Adventure</span>
+            </label>
+            <!-- New IMDb Genres -->
+            <label class="flex items-center space-x-2 cursor-pointer text-white">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600" value="animation" x-model="selectedGenre">
+                <span class="text-sm">Animation</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer text-white">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600" value="fantasy" x-model="selectedGenre">
+                <span class="text-sm">Fantasy</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer text-white">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600" value="horror" x-model="selectedGenre">
+                <span class="text-sm">Horror</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer text-white">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600" value="musical" x-model="selectedGenre">
+                <span class="text-sm">Musical</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer text-white">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-400 bg-gray-700 border-gray-600" value="romance" x-model="selectedGenre">
+                <span class="text-sm">Romance</span>
+            </label>
+            <!-- Add more genres as needed -->
+        </div>
+        <div class="flex justify-end mt-4">
+            <button @click="genreModal = false" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg mr-2 transition-colors duration-200">
+                Cancel
+            </button>
+            <button @click="filterPosts(); genreModal = false" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                Apply
+            </button>
+        </div>
+    </div>
+</div>
+
+            <div class="flex justify-end mt-4">
+                <button @click="genreModal = false" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-lg mr-2 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button @click="filterPosts(); genreModal = false" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}
+        <div class="container mx-auto p-4">
+            <div id="movieGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {% for item in data %}
+                <article class="bg-gray-800 rounded-lg overflow-hidden shadow-lg" data-genre="{{ item.Genre | lower }}">
+                    <a href="/{{ item.slug }}" class="block" title="View details for {{ item.Name }}">
+                        <img id="img-{{ loop.index }}" src="{{ item.Thumbimage_src }}" alt="{{ item.Name }}" class="w-full h-64 object-cover">
+                        <div class="p-4">
+                            <h2 class="text-xl font-bold">{{ item.Name }}</h2>
+                            <div class="mt-2">
+                                {% if item.Genre %}
+                                    {% for genre in item.Genre.split(',') %}
+                                        <a href="/genre/{{ genre.trim() | lower }}" class="inline-block bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-200 mr-2 mb-2 hover:bg-gray-600 transition-colors duration-200">{{ genre.trim() }}</a>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="inline-block bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-200 mr-2 mb-2">No Genre</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+    <footer class="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 Pegasus. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        function filterPosts() {
+            const searchTerm = document.querySelector('[x-model="search"]').value.toLowerCase();
+            const selectedGenres = Array.from(document.querySelectorAll('input[x-model="selectedGenre"]:checked')).map(el => el.value.toLowerCase());
+
+            document.querySelectorAll('#movieGrid article').forEach(article => {
+                const itemGenres = article.getAttribute('data-genre').split(',').map(g => g.trim().toLowerCase());
+                const matchesSearch = searchTerm === '' || article.querySelector('h2').textContent.toLowerCase().includes(searchTerm);
+                const matchesGenres = selectedGenres.length === 0 || selectedGenres.some(genre => itemGenres.includes(genre));
+
+                if (matchesSearch && matchesGenres) {
+                    article.style.display = '';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
