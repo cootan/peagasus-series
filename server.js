@@ -3,7 +3,7 @@ const nunjucks = require('nunjucks');
 const axios = require('axios');
 
 const app = express();
-const port = 3020; // Fixed port
+const port = 3020;
 
 nunjucks.configure('views', {
     autoescape: true,
@@ -13,7 +13,6 @@ nunjucks.configure('views', {
 app.use(express.static('public'));
 app.use(express.json());
 
-// Use the API key directly in the headers for Supabase requests
 const fetchData = async () => {
     try {
         const response = await axios.get('https://eqalzzsaeycollxbvtvt.supabase.co/rest/v1/data', {
@@ -36,8 +35,23 @@ const fetchData = async () => {
     }
 };
 
+// Function to fetch data and handle multiple parallel requests
+const fetchDataParallel = async () => {
+    try {
+        const requests = [
+            fetchData(),
+            fetchData() // Add more fetch requests if needed
+        ];
+        const [data1, data2] = await Promise.all(requests);
+        return [...data1, ...data2]; // Combine the results if necessary
+    } catch (error) {
+        console.error('Error fetching data in parallel:', error);
+        return [];
+    }
+};
+
 app.get('/posts', async (req, res) => {
-    const data = await fetchData();
+    const data = await fetchDataParallel();
     const page = parseInt(req.query.page) || 1;
     const itemsPerPage = 12;
     const paginatedData = paginateData(data, page, itemsPerPage);
@@ -49,12 +63,12 @@ app.get('/posts', async (req, res) => {
 });
 
 app.get('/', async (req, res) => {
-    await fetchData(); // Data is not used, but fetching it here just in case
+    await fetchDataParallel(); // Data is not used, but fetching it here just in case
     res.render('index.njk');
 });
 
 app.get('/:slug', async (req, res) => {
-    const data = await fetchData();
+    const data = await fetchDataParallel();
     const item = data.find(i => i.slug === req.params.slug);
     if (item) {
         if (item.type === 'series') {
@@ -69,7 +83,7 @@ app.get('/:slug', async (req, res) => {
 
 app.get('/genre/:genre', async (req, res) => {
     const { genre } = req.params;
-    const data = await fetchData();
+    const data = await fetchDataParallel();
     const filteredData = data.filter(item => 
         item.genre.some(g => g.toLowerCase().includes(genre.toLowerCase()))
     );
